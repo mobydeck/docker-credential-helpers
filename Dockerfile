@@ -112,20 +112,24 @@ RUN --mount=type=bind,target=. \
   xx-go --wrap
   case "$(xx-info os)" in
     linux)
-      make build-pass build-secretservice PACKAGE=$PACKAGE VERSION=$(cat /tmp/.version) REVISION=$(cat /tmp/.revision) DESTDIR=/out
+      make build-pass build-secretservice build-plain PACKAGE=$PACKAGE VERSION=$(cat /tmp/.version) REVISION=$(cat /tmp/.revision) DESTDIR=/out
       xx-verify /out/docker-credential-pass
       xx-verify /out/docker-credential-secretservice
+      xx-verify /out/docker-credential-plain
       ;;
     darwin)
       go install std
-      make build-osxkeychain build-pass PACKAGE=$PACKAGE VERSION=$(cat /tmp/.version) REVISION=$(cat /tmp/.revision) DESTDIR=/out
+      make build-osxkeychain build-pass build-plain PACKAGE=$PACKAGE VERSION=$(cat /tmp/.version) REVISION=$(cat /tmp/.revision) DESTDIR=/out
       xx-verify /out/docker-credential-osxkeychain
       xx-verify /out/docker-credential-pass
+      xx-verify /out/docker-credential-plain
       ;;
     windows)
-      make build-wincred PACKAGE=$PACKAGE VERSION=$(cat /tmp/.version) REVISION=$(cat /tmp/.revision) DESTDIR=/out
+      make build-wincred build-plain PACKAGE=$PACKAGE VERSION=$(cat /tmp/.version) REVISION=$(cat /tmp/.revision) DESTDIR=/out
       mv /out/docker-credential-wincred /out/docker-credential-wincred.exe
+      mv /out/docker-credential-plain /out/docker-credential-plain.exe
       xx-verify /out/docker-credential-wincred.exe
+      xx-verify /out/docker-credential-plain.exe
       ;;
   esac
 EOT
